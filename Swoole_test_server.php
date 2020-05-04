@@ -1,14 +1,26 @@
 <?php
+## load composer
+include 'vendor/autoload.php';
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
+$dotenv->load();
 
 # 連線
-$__host = '0.0.0.0';
-$__port = 10182;
+// $__host = '0.0.0.0';
+// $__port = 10184;
+$__host = getenv('WebSocket_host');
+$__port = getenv('WebSocket_port');
 
 ### redis
+
+$Redis_host = getenv('Redis_host');
+$Redis_port = getenv('Redis_port');
+$Redis_db   = getenv('Redis_db');
+$Redis_Auth = getenv('Redis_Auth');
+
 $redis = new Redis();
-$redis->connect('127.0.0.1', 6379);
-$redis->auth("f^UgNq%fQxbTcAUQDE8a&zjx#WBdkJ");
-$redis->select(15);
+$redis->connect($Redis_host, $Redis_port);
+$redis->auth($Redis_Auth);
+$redis->select($Redis_db);
 
 $server = new swoole_websocket_server($__host, $__port);
 
@@ -40,7 +52,7 @@ $server->on('message', function (swoole_websocket_server $server, $frame) {
 
     ###  發給誰
     @$server->push($return_fd, $frame->data);
-    
+
     // $info  = [] ;
     // $info[$json['id']] = [
     //     'fd' => $frame->fd,
