@@ -35,11 +35,24 @@ switch ($_GET['event']) {
         // print_r($lists);
         unset($lists[$key]);
 
-        $lists = array_values($lists); 
+        $lists = array_values($lists);
         ###
         $data['data'] = [
             "lists" => $lists,
         ];
+
+        break;
+    case 'getlist':
+        if (isset($_GET['id'])) {
+            $id           = $_GET['id'];
+            $redis_key    = str_replace("user_id_", "", $id) . '_msg';
+            $lists        = $redis->lrange($redis_key, 0, 5);
+            $data['code'] = 0;
+            $data['msg']  = 'success';
+            $data['data'] = [
+                "lists" => array_reverse($lists),
+            ];
+        }
 
         break;
 }

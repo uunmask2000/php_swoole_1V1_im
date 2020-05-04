@@ -95,6 +95,32 @@
             $('#set_people').html(d);
             // alert(d)
             $('#sse').append('<ul id="' + d + '"></ul>');
+
+            //
+            if ($('#' + d + " > li").length == 0) {
+                $.getJSON("http://103.117.121.146:10181/Api.php?event=getlist&id=" + d, function (result) {
+                    // $.each(result, function (i, field) {
+                    //     $("p").append(field + " ");
+                    // });
+                    // console.log(result);
+                    result.data.lists.forEach(element => {
+                        var element = JSON.parse(element);
+                        var msg = JSON.parse(element.msg);
+                        console.log(msg);
+                        // 
+                        switch (msg.id) {
+                            case 2:
+                                $('#' + d).append('<li>Server : ' + msg.data + '</li>');
+                                break;
+                            default:
+                                $('#' + d).append('<li>客戶來訊 : ' + msg.data + '</li>');
+                                break;
+                        }
+
+                    });
+
+                });
+            }
         }
 
         $.getJSON("http://103.117.121.146:10181/Api.php?event=lists", function (result) {

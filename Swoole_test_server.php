@@ -42,25 +42,37 @@ $server->on('message', function (swoole_websocket_server $server, $frame) {
         $server->push($frame->fd, "This message is from swoole websocket server.");
         return;
     } else {
-
         $redis->set("user_id_" . $json['id'], $frame->fd);
-
+        $redis->expire("user_id_" . $json['id'], 60 * 60 * 24);
     }
 
     print_r($json);
 
+    ### redis
+
     switch ($json['id']) {
         case '2':
             // $return_fd = $redis->get("user_id_" . '1');
-            $user_id   = $json['user_id'];
-            $return_fd = $redis->get($user_id);
+            echo $user_id = $json['user_id'];
+            $return_fd    = $redis->get($user_id);
+            $__user_id    = str_replace("user_id_", "", $user_id);
+            if ($__user_id != "") {
+                $redis_key = str_replace("user_id_", "", $user_id) . '_msg';
+                $redis->lpush($redis_key, json_encode(['c' => 2, 'msg' => $frame->data]));
+            }
+
             break;
         default:
 
             // $server->push($frame->fd, "This message is from swoole websocket server.");
             // return false;
-            $return_fd = $redis->get("user_id_" . '2');
+
+            $return_fd        = $redis->get("user_id_" . '2');
             $frame->client_id = $json['id'];
+            $redis_key        = $json['id'] . '_msg';
+            if ($json["data"] != "") {
+                $redis->lpush($redis_key, json_encode(['c' => 1, 'msg' => $frame->data]));
+            }
             break;
     }
 
