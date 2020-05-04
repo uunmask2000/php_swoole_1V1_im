@@ -5,6 +5,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <script src="https://code.jquery.com/jquery-2.2.4.js" integrity="sha256-iT6Q9iMJYuQiMWNd9lDyBUStIq/8PuOW33aOqmvFpqI="
     crossorigin="anonymous"></script>
+<link rel="stylesheet" type="text/css" href="main.css" />
 
 <head>
 
@@ -27,7 +28,7 @@
         }
 
         function push_data(ws, data, id) {
-          
+
             var msg = {
                 id: id,
                 data: data
@@ -41,11 +42,42 @@
             }
             // console.log(msg);
             ws.send(JSON.stringify(msg));
+
+            var div = document.getElementById('msg');
+            div.scrollTop = div.scrollHeight; //这里是关键的实现
         }
 
 
 
         var id = getCookie('id') != "" ? getCookie('id') : setCookie('id', new Date().getTime(), 1);
+
+
+        if ($("#msg > li").length == 0) {
+            $.getJSON("http://103.117.121.146:10181/Api.php?event=getlist&id=" + id, function (result) {
+                // $.each(result, function (i, field) {
+                //     $("p").append(field + " ");
+                // });
+                // console.log(result);
+                result.data.lists.forEach(element => {
+                    var element = JSON.parse(element);
+                    var msg = JSON.parse(element.msg);
+                    console.log(msg);
+                    // 
+                    switch (msg.id) {
+                        case 2:
+                            $('#msg').append('<li>Server : ' + msg.data + '</li>');
+                            break;
+                        default:
+                            $('#msg').append('<li>clinet  : ' + msg.data + '</li>');
+                            break;
+                    }
+
+                });
+                var div = document.getElementById('msg');
+                div.scrollTop = div.scrollHeight; //这里是关键的实现
+
+            });
+        }
 
 
 
@@ -97,7 +129,7 @@
 
 <body>
     <div id="sse">
-        <ul id="msg"></ul>
+        <ul id="msg" class="dropdown nav"></ul>
     </div>
     <input type="text" id="msgtext" value="hello">
     <button onclick="send()">送出</button>

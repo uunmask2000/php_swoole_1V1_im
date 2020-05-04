@@ -46,7 +46,7 @@ switch ($_GET['event']) {
         if (isset($_GET['id'])) {
             $id           = $_GET['id'];
             $redis_key    = str_replace("user_id_", "", $id) . '_msg';
-            $lists        = $redis->lrange($redis_key, 0, 5);
+            $lists        = $redis->lrange($redis_key, 0, 100);
             $data['code'] = 0;
             $data['msg']  = 'success';
             $data['data'] = [

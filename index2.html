@@ -5,6 +5,8 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <script src="https://code.jquery.com/jquery-2.2.4.js" integrity="sha256-iT6Q9iMJYuQiMWNd9lDyBUStIq/8PuOW33aOqmvFpqI="
     crossorigin="anonymous"></script>
+<link rel="stylesheet" type="text/css" href="main.css" />
+
 
 <head>
 
@@ -39,6 +41,10 @@
             }
 
             ws.send(JSON.stringify(msg));
+
+
+            var div = document.getElementById($('#set_people').text());
+            div.scrollTop = div.scrollHeight; //这里是关键的实现
         }
 
 
@@ -94,7 +100,7 @@
         function Set(d) {
             $('#set_people').html(d);
             // alert(d)
-            $('#sse').append('<ul id="' + d + '"></ul>');
+            $('#sse').append('<ul id="' + d + '" class="dropdown nav"></ul>');
 
             //
             if ($('#' + d + " > li").length == 0) {
@@ -118,6 +124,9 @@
                         }
 
                     });
+
+                    var div = document.getElementById(d);
+                    div.scrollTop = div.scrollHeight; //这里是关键的实现
 
                 });
             }

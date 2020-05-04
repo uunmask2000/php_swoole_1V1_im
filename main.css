@@ -1,0 +1,22 @@
+.nav {
+    width: 12em;
+    height: 20em;
+    line-height: 2em;
+    border: 1px solid #ccc;
+    padding: 0;
+    margin: 0;
+    overflow: scroll;
+    overflow-x: hidden;
+}
+
+li {
+    border-top: 1px solid #ccc;
+}
+
+ul ul {
+    text-indent: 1em;
+}
+
+ul ul ul {
+    text-indent: 2em;
+}
