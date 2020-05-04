@@ -1,7 +1,7 @@
 <!DOCTYPE HTML>
 
 <html>
-    <title>客服端</title>
+<title>客服端</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <script src="https://code.jquery.com/jquery-2.2.4.js" integrity="sha256-iT6Q9iMJYuQiMWNd9lDyBUStIq/8PuOW33aOqmvFpqI="
     crossorigin="anonymous"></script>
@@ -29,10 +29,13 @@
         function push_data(ws, data, id) {
             var msg = {
                 'id': id,
+                'user_id': $('#set_people').text(),
                 data: data
             }
             if (data != "") {
-                $("#msg").append('<li>Server  : ' + data + '</li>');
+                // $("#msg").append('<li>Server  : ' + data + '</li>');
+                $("#" + $('#set_people').text()).append('<li>Server  : ' + data + '</li>');
+
             }
 
             ws.send(JSON.stringify(msg));
@@ -48,7 +51,7 @@
             // alert("WebSocket is supported by your Browser!");
 
             // Let us open a web socket
-            var ws = new WebSocket("ws://103.117.121.146:10182/");
+            var ws = new WebSocket("ws://103.117.121.146:10184/");
 
             ws.onopen = function () {
                 push_data(ws, '', id);
@@ -62,7 +65,8 @@
                 var received_msg = JSON.parse(evt.data);
                 // alert("Message is received..." + received_msg);
                 if (received_msg.data != "") {
-                    $("#msg").append('<li>客戶來訊 : ' + received_msg.data + '</li>');
+                    // $("#msg").append('<li>客戶來訊 : ' + received_msg.data + '</li>'); 
+                    $('#user_id_' + received_msg.id).append('<li>客戶來訊 : ' + received_msg.data + '</li>');
                 }
             };
 
@@ -84,11 +88,37 @@
             push_data(ws, msg, id);
             // console.log(msg);
         }
+
+
+
+        function Set(d) {
+            $('#set_people').html(d);
+            // alert(d)
+            $('#sse').append('<ul id="' + d + '"></ul>');
+        }
+
+        $.getJSON("http://103.117.121.146:10181/Api.php?event=lists", function (result) {
+            // $.each(result, function (i, field) {
+            //     $("p").append(field + " ");
+            // });
+            // console.log(result);
+            result.data.lists.forEach(element => {
+                console.log(element);
+                $('#lists').append('<tr><td>' + element + '</td><td><button onclick="Set(\'' + element +
+                    '\');">設定</button></td></tr>')
+            });
+        });
     </script>
 
 </head>
 
 <body>
+
+    <table id="lists"></table>
+    <div>
+        點選客戶
+        <p id="set_people"></p>
+    </div>
     <div id="sse">
         <ul id="msg"></ul>
     </div>

@@ -1,7 +1,7 @@
 <!DOCTYPE HTML>
 
 <html>
-    <title>客戶端</title>
+<title>客戶端</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <script src="https://code.jquery.com/jquery-2.2.4.js" integrity="sha256-iT6Q9iMJYuQiMWNd9lDyBUStIq/8PuOW33aOqmvFpqI="
     crossorigin="anonymous"></script>
@@ -27,28 +27,34 @@
         }
 
         function push_data(ws, data, id) {
+          
             var msg = {
-                'id': id,
+                id: id,
                 data: data
             }
             if (data != "") {
                 $("#msg").append('<li>clinet : ' + data + '</li>');
             }
 
+            if (msg.id == undefined) {
+                location.reload();
+            }
+            // console.log(msg);
             ws.send(JSON.stringify(msg));
         }
 
 
 
-        // var id = getCookie('id') != "" ? getCookie('id') : setCookie('id', new Date().getTime(), 1);
-        var id = 1;
+        var id = getCookie('id') != "" ? getCookie('id') : setCookie('id', new Date().getTime(), 1);
+
+
 
 
         if ("WebSocket" in window) {
             // alert("WebSocket is supported by your Browser!");
 
             // Let us open a web socket
-            var ws = new WebSocket("ws://103.117.121.146:10182/");
+            var ws = new WebSocket("ws://103.117.121.146:10184/");
 
             ws.onopen = function () {
                 push_data(ws, '', id);

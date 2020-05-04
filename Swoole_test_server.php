@@ -10,6 +10,7 @@ $dotenv->load();
 $__host = getenv('WebSocket_host');
 $__port = getenv('WebSocket_port');
 
+echo $__host . ':' . $__port . "\n";
 ### redis
 
 $Redis_host = getenv('Redis_host');
@@ -36,22 +37,35 @@ $server->on('message', function (swoole_websocket_server $server, $frame) {
     $json = json_decode($frame->data, true);
     global $redis;
 
-    $redis->set("user_id_" . $json['id'], $frame->fd);
+    ## 存放對話資料
+    if (!isset($json['id'])) {
+        $server->push($frame->fd, "This message is from swoole websocket server.");
+        return;
+    } else {
+
+        $redis->set("user_id_" . $json['id'], $frame->fd);
+
+    }
+
+    print_r($json);
+
     switch ($json['id']) {
         case '2':
-            $return_fd = $redis->get("user_id_" . '1');
-            break;
-        case '1':
-            $return_fd = $redis->get("user_id_" . '2');
+            // $return_fd = $redis->get("user_id_" . '1');
+            $user_id   = $json['user_id'];
+            $return_fd = $redis->get($user_id);
             break;
         default:
+
             // $server->push($frame->fd, "This message is from swoole websocket server.");
-            return false;
+            // return false;
+            $return_fd = $redis->get("user_id_" . '2');
+            $frame->client_id = $json['id'];
             break;
     }
 
     ###  發給誰
-    @$server->push($return_fd, $frame->data);
+    $server->push($return_fd, $frame->data);
 
     // $info  = [] ;
     // $info[$json['id']] = [
