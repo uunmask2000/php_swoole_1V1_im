@@ -72,7 +72,8 @@
                 // alert("Message is received..." + received_msg);
                 if (received_msg.data != "") {
                     // $("#msg").append('<li>客戶來訊 : ' + received_msg.data + '</li>'); 
-                    $('#user_id_' + received_msg.id).append('<li>客戶來訊 : ' + received_msg.data + '</li>');
+                    $('#user_id_' + received_msg.id).append('<li> user_id_' + received_msg.id + '  客戶來訊 : ' +
+                        received_msg.data + '</li>');
                 }
             };
 
@@ -100,7 +101,7 @@
         function Set(d) {
             $('#set_people').html(d);
             // alert(d)
-            $('#sse').append('<ul id="' + d + '" class="dropdown nav"></ul>');
+            $('#sse').append('<h1><' + d + '/h1><hr><ul id="' + d + '" class="dropdown nav"></ul><hr>');
 
             //
             if ($('#' + d + " > li").length == 0) {
@@ -119,7 +120,7 @@
                                 $('#' + d).append('<li>Server : ' + msg.data + '</li>');
                                 break;
                             default:
-                                $('#' + d).append('<li>客戶來訊 : ' + msg.data + '</li>');
+                                $('#' + d).append('<li>  ' + d + ' 客戶來訊 : ' + msg.data + '</li>');
                                 break;
                         }
 
@@ -148,8 +149,9 @@
 </head>
 
 <body>
-
-    <table id="lists"></table>
+    <div class="scrollit">
+        <table id="lists"></table>
+    </div>
     <div>
         點選客戶
         <p id="set_people"></p>

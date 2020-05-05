@@ -1,5 +1,5 @@
 .nav {
-    width: 12em;
+    width: 50em;
     height: 20em;
     line-height: 2em;
     border: 1px solid #ccc;
@@ -19,4 +19,9 @@ ul ul {
 
 ul ul ul {
     text-indent: 2em;
+}
+
+.scrollit {
+    overflow:scroll;
+    height:100px;
 }
