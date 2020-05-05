@@ -10,6 +10,13 @@
 <head>
 
     <script type="text/javascript">
+        var id = getCookie('id') != "" ? getCookie('id') : setCookie('id', new Date().getTime(), 1);
+        $(function () {
+
+            $("#name").text('客戶編號 :' + id);
+        });
+
+
         function getCookie(cname) {
             var name = cname + "=";
             var ca = document.cookie.split(';');
@@ -49,7 +56,7 @@
 
 
 
-        var id = getCookie('id') != "" ? getCookie('id') : setCookie('id', new Date().getTime(), 1);
+
 
 
         if ($("#msg > li").length == 0) {
@@ -61,7 +68,6 @@
                 result.data.lists.forEach(element => {
                     var element = JSON.parse(element);
                     var msg = JSON.parse(element.msg);
-                    console.log(msg);
                     // 
                     switch (msg.id) {
                         case 2:
@@ -128,6 +134,7 @@
 </head>
 
 <body>
+    <div id="name"></div>
     <div id="sse">
         <ul id="msg" class="dropdown nav"></ul>
     </div>
