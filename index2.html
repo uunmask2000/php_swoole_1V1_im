@@ -34,15 +34,17 @@
                 'user_id': $('#set_people').text(),
                 data: data
             }
+            console.log(msg)
             if (data != "") {
                 // $("#msg").append('<li>Server  : ' + data + '</li>');
-                $("#" + $('#set_people').text()).append('<li>Server  : ' + data + '</li>');
+                $("#user_id_" + $('#set_people').text()).append('<li>Server  : ' + data + '</li>');
+                // $("#" + id).append('<li>Server  : ' + data + '</li>');
 
             }
             ws.send(JSON.stringify(msg));
 
-            // var div = document.getElementById($('#set_people').text());
-            // div.scrollTop = div.scrollHeight; //这里是关键的实现
+            var div = document.getElementById('user_id_'+$('#set_people').text());
+            div.scrollTop = div.scrollHeight; //这里是关键的实现
         }
 
 
