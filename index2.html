@@ -39,9 +39,7 @@
                 $("#" + $('#set_people').text()).append('<li>Server  : ' + data + '</li>');
 
             }
-
             ws.send(JSON.stringify(msg));
-
 
             // var div = document.getElementById($('#set_people').text());
             // div.scrollTop = div.scrollHeight; //这里是关键的实现
@@ -69,12 +67,22 @@
 
             ws.onmessage = function (evt) {
                 var received_msg = JSON.parse(evt.data);
-                // alert("Message is received..." + received_msg);
+                if ($("#user_id_" + received_msg.id).length == 0) {
+                    //do something 
+                    var id = "user_id_" + received_msg.id;
+                    create_msg(id);
+                }
+
+
                 if (received_msg.data != "") {
                     // $("#msg").append('<li>客戶來訊 : ' + received_msg.data + '</li>'); 
                     $('#user_id_' + received_msg.id).append('<li> user_id_' + received_msg.id + '  客戶來訊 : ' +
                         received_msg.data + '</li>');
                 }
+
+
+
+
             };
 
 
@@ -111,10 +119,22 @@
         }
 
         function Set(d) {
-            $('#set_people').html(d);
-            // alert(d)
-            $('#sse').append('<h1><' + d + '/h1><hr><ul id="' + d + '" class="dropdown nav"></ul><hr>');
+            var id = "user_id_" + d;
+            if ($('#' + id).length == 0) {
 
+                // alert(d)
+                create_msg(id);
+            }
+
+
+        }
+
+        function create_msg(d) {
+            var d = d.replace('user_id_', '').replace('user_id_', '');
+            // 切換客戶標籤
+            $('#set_people').html(d);
+
+            $('#sse').append('<h1>' + d + ' 客戶 </h1><hr><ul id="user_id_' + d + '" class="dropdown nav"></ul><hr>');
             //
             if ($('#' + d + " > li").length == 0) {
                 $.getJSON("http://103.117.121.146:10181/Api.php?event=getlist&id=" + d, function (result) {
@@ -125,20 +145,21 @@
                     result.data.lists.forEach(element => {
                         var element = JSON.parse(element);
                         var msg = JSON.parse(element.msg);
-                        console.log(msg);
+                        // console.log(msg);
                         // 
                         switch (msg.id) {
                             case 2:
-                                $('#' + d).append('<li>Server : ' + msg.data + '</li>');
+                                $('#user_id_' + d).append('<li>Server : ' + msg.data + '</li>');
                                 break;
                             default:
-                                $('#' + d).append('<li>  ' + d + ' 客戶來訊 : ' + msg.data + '</li>');
+                                $('#user_id_' + d).append('<li>  user_id_' + d + ' 客戶來訊 : ' + msg.data +
+                                    '</li>');
                                 break;
                         }
 
                     });
-
-                    var div = document.getElementById(d);
+                    var __body = 'user_id_' + d;
+                    var div = document.getElementById(__body);
                     div.scrollTop = div.scrollHeight; //这里是关键的实现
 
                 });
@@ -154,8 +175,6 @@
                 // console.log(result);
                 $('#lists').html("");
                 result.data.lists.forEach(element => {
-                    console.log(element);
-                    
                     $('#lists').append('<tr><td>' + element + '</td><td><button onclick="Set(\'' +
                         element +
                         '\');">設定</button></td></tr>')
@@ -173,11 +192,10 @@
         <table id="lists"></table>
     </div>
     <div>
-        點選客戶
-        <p id="set_people"></p>
+        <h2>點選客戶</h2>
+        <h3 id="set_people"></h3>
     </div>
     <div id="sse">
-        <ul id="msg"></ul>
     </div>
     <input type="text" id="msgtext" value="hello">
     <button onclick="__close()">關閉對話</button>
