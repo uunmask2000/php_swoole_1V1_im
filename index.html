@@ -17,6 +17,10 @@
         });
 
 
+        function delete_cookie(name) {
+            document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+        }
+
         function getCookie(cname) {
             var name = cname + "=";
             var ca = document.cookie.split(';');
@@ -64,7 +68,7 @@
                 // $.each(result, function (i, field) {
                 //     $("p").append(field + " ");
                 // });
-                // console.log(result);
+                console.log(result);
                 result.data.lists.forEach(element => {
                     var element = JSON.parse(element);
                     var msg = JSON.parse(element.msg);
@@ -72,6 +76,10 @@
                     switch (msg.id) {
                         case 2:
                             $('#msg').append('<li>Server : ' + msg.data + '</li>');
+                            break;
+                        case 3:
+                            // 强制离线
+                            delete_cookie('id');
                             break;
                         default:
                             $('#msg').append('<li>clinet  : ' + msg.data + '</li>');
@@ -105,8 +113,21 @@
             ws.onmessage = function (evt) {
                 var received_msg = JSON.parse(evt.data);
                 // alert("Message is received..." + received_msg);
-                if (received_msg.data != "") {
+                if (received_msg.data != "" && typeof received_msg.data !== 'object') {
                     $("#msg").append('<li>Server : ' + received_msg.data + '</li>');
+                } else if (typeof received_msg.data === 'object') {
+                    // 是object 
+                    switch (received_msg.data.event) {
+                        case 'close':
+                            // 刪除cookie
+                            delete_cookie('id');
+                            ws.close();
+                            break;
+
+                        default:
+                            break;
+                    }
+
                 }
 
             };
@@ -116,7 +137,8 @@
             ws.onclose = function () {
 
                 // websocket is closed.
-                alert("Connection is closed...");
+                // alert("Connection is closed...");
+                location.reload();
             };
         } else {
 
@@ -128,7 +150,7 @@
             var msg = document.getElementById("msgtext").value;
             push_data(ws, msg, id);
             // console.log(msg);
-        }
+        }        
     </script>
 
 </head>

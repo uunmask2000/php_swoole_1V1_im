@@ -27,6 +27,16 @@ if (!isset($_GET['event'])) {
     return;
 }
 switch ($_GET['event']) {
+    case 'check_key':
+        $id           = $_GET['id'];
+        $redis_key    = str_replace("user_id_", "", $id) . '_msg';
+        $lists        = $redis->keys($redis_key);
+        $data['code'] = 0;
+        $data['msg']  = 'success';
+        $data['data'] = [
+            "lists" => $lists,
+        ];
+        break;
     case 'lists':
         $lists        = $redis->keys("user_id_*");
         $data['code'] = 0;

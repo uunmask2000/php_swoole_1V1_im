@@ -43,8 +43,8 @@
             ws.send(JSON.stringify(msg));
 
 
-            var div = document.getElementById($('#set_people').text());
-            div.scrollTop = div.scrollHeight; //这里是关键的实现
+            // var div = document.getElementById($('#set_people').text());
+            // div.scrollTop = div.scrollHeight; //这里是关键的实现
         }
 
 
@@ -82,7 +82,8 @@
             ws.onclose = function () {
 
                 // websocket is closed.
-                alert("Connection is closed...");
+                // alert("Connection is closed...");
+                location.reload();
             };
         } else {
 
@@ -96,7 +97,18 @@
             // console.log(msg);
         }
 
+        function __close() {
+            var msg = {
+                'id': id,
+                'user_id': $('#set_people').text(),
+                "data": {
+                    event: "close"
+                }
+            }
+            ws.send(JSON.stringify(msg));
+            location.reload();
 
+        }
 
         function Set(d) {
             $('#set_people').html(d);
@@ -133,17 +145,25 @@
             }
         }
 
-        $.getJSON("http://103.117.121.146:10181/Api.php?event=lists", function (result) {
-            // $.each(result, function (i, field) {
-            //     $("p").append(field + " ");
-            // });
-            // console.log(result);
-            result.data.lists.forEach(element => {
-                console.log(element);
-                $('#lists').append('<tr><td>' + element + '</td><td><button onclick="Set(\'' + element +
-                    '\');">設定</button></td></tr>')
+        function getlist() {
+
+            $.getJSON("http://103.117.121.146:10181/Api.php?event=lists", function (result) {
+                // $.each(result, function (i, field) {
+                //     $("p").append(field + " ");
+                // });
+                // console.log(result);
+                $('#lists').html("");
+                result.data.lists.forEach(element => {
+                    console.log(element);
+                    
+                    $('#lists').append('<tr><td>' + element + '</td><td><button onclick="Set(\'' +
+                        element +
+                        '\');">設定</button></td></tr>')
+                });
             });
-        });
+        }
+        getlist();
+        setInterval(getlist, 3000);
     </script>
 
 </head>
@@ -160,7 +180,9 @@
         <ul id="msg"></ul>
     </div>
     <input type="text" id="msgtext" value="hello">
+    <button onclick="__close()">關閉對話</button>
     <button onclick="send()">送出</button>
+
 
 
 </body>
