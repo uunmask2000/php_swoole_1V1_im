@@ -77,7 +77,7 @@ $server->on('message', function (swoole_websocket_server $server, $frame) {
                 if ($php_errormsg == null) {
                     ## clear customer
                     ## customer Fd
-                    $redis->del($user_id);
+                    $redis->del($prefix .$user_id);
                     ## customer message
                     $redis->del($__user_id . '_msg');
                     var_dump($php_errormsg);
