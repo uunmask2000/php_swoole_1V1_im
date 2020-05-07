@@ -5,7 +5,15 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <script src="https://code.jquery.com/jquery-2.2.4.js" integrity="sha256-iT6Q9iMJYuQiMWNd9lDyBUStIq/8PuOW33aOqmvFpqI="
     crossorigin="anonymous"></script>
-<link rel="stylesheet" type="text/css" href="main.css" />
+<link rel="stylesheet" type="text/css" href="css/main.css" />
+<script src='js/inputEmoji.js'></script>
+<script>
+    $(function () {
+        $('textarea').emoji({
+            place: 'after'
+        });
+    })
+</script>
 
 <head>
 
@@ -178,10 +186,10 @@
     <div id="sse">
         <ul id="msg" class="dropdown nav"></ul>
     </div>
-    <input type="text" id="msgtext" value="hello">
+    <textarea name="mes" placeholder="type message here..."  id="msgtext" ></textarea> 
     <button onclick="send()">送出</button>
 
-
+ 
 </body>
 
 </html>
