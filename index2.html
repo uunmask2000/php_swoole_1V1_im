@@ -53,8 +53,8 @@
 
             // console.log($('#set_people').text())
 
-            var div_id = 'user_id_' + $('#set_people').text() ;
-            console.log( div_id)
+            var div_id = 'user_id_' + $('#set_people').text();
+            console.log(div_id)
 
             var div = document.getElementById(div_id);
             div.scrollTop = div.scrollHeight; //这里是关键的实现
@@ -125,20 +125,26 @@
         }
 
         function __close() {
-            var msg = {
-                'id': id,
-                'user_id': $('#set_people').text(),
-                "data": {
-                    event: "close"
+
+            var txt;
+            var r = confirm("確認是否要結束通話???");
+            if (r == true) { 
+                var msg = {
+                    'id': id,
+                    'user_id': $('#set_people').text(),
+                    "data": {
+                        event: "close"
+                    }
                 }
+                ws.send(JSON.stringify(msg));
+                location.reload();
             }
-            ws.send(JSON.stringify(msg));
-            location.reload();
+
 
         }
 
         function Set(d) {
-            var id = d; 
+            var id = d;
             if ($('#' + id).length == 0) {
 
                 // alert(d)
@@ -216,10 +222,10 @@
     </div>
     <div id="sse">
     </div>
-    <textarea name="mes" placeholder="type message here..."  id="msgtext" ></textarea> 
-    <button onclick="__close()">關閉對話</button>
-    <button onclick="send()">送出</button>
+    <textarea name="mes" placeholder="type message here..." id="msgtext"></textarea>
 
+    <button onclick="send()">送出</button>
+    <button onclick="__close()">關閉對話</button>
 
 
 </body>
