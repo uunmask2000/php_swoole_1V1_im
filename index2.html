@@ -34,7 +34,7 @@
                 'user_id': $('#set_people').text(),
                 data: data
             }
-            console.log(msg)
+            // console.log(msg)
             if (data != "") {
                 // $("#msg").append('<li>Server  : ' + data + '</li>');
                 $("#user_id_" + $('#set_people').text()).append('<li>Server  : ' + data + '</li>');
@@ -43,7 +43,12 @@
             }
             ws.send(JSON.stringify(msg));
 
-            var div = document.getElementById('user_id_' + $('#set_people').text());
+            // console.log($('#set_people').text())
+
+            var div_id = 'user_id_' + $('#set_people').text() ;
+            console.log( div_id)
+
+            var div = document.getElementById(div_id);
             div.scrollTop = div.scrollHeight; //这里是关键的实现
         }
 
@@ -125,7 +130,7 @@
         }
 
         function Set(d) {
-            var id = "user_id_" + d;
+            var id = d; 
             if ($('#' + id).length == 0) {
 
                 // alert(d)

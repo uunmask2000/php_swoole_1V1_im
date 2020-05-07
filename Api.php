@@ -11,6 +11,9 @@ include 'vendor/autoload.php';
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
 $dotenv->load();
 
+## redis user_id 
+$prefix = "user_id_";
+
 $Redis_host = getenv('Redis_host');
 $Redis_port = getenv('Redis_port');
 $Redis_db   = getenv('Redis_db');
@@ -33,7 +36,7 @@ if (!isset($_GET['event'])) {
 switch ($_GET['event']) {
     case 'check_key':
         $id           = $_GET['id'];
-        $redis_key    = str_replace("user_id_", "", $id) . '_msg';
+        $redis_key    = str_replace($prefix, "", $id) . '_msg';
         $lists        = $redis->keys($redis_key);
         $data['code'] = 0;
         $data['msg']  = 'success';
@@ -42,10 +45,10 @@ switch ($_GET['event']) {
         ];
         break;
     case 'lists':
-        $lists        = $redis->keys("user_id_*");
+        $lists        = $redis->keys($prefix."*");
         $data['code'] = 0;
         $data['msg']  = 'success';
-        $key          = array_search("user_id_2", $lists);
+        $key          = array_search($prefix."2", $lists);
         // print_r($lists);
         unset($lists[$key]);
 
@@ -59,7 +62,7 @@ switch ($_GET['event']) {
     case 'getlist':
         if (isset($_GET['id'])) {
             $id           = $_GET['id'];
-            $redis_key    = str_replace("user_id_", "", $id) . '_msg';
+            $redis_key    = str_replace($prefix, "", $id) . '_msg';
             $lists        = $redis->lrange($redis_key, 0, 100);
             $data['code'] = 0;
             $data['msg']  = 'success';

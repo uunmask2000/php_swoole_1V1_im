@@ -10,7 +10,21 @@
 <head>
 
     <script type="text/javascript">
-        var id = getCookie('id') != "" ? getCookie('id') : setCookie('id', new Date().getTime(), 1);
+        function _uuid() {
+            var d = Date.now();
+            if (typeof performance !== 'undefined' && typeof performance.now === 'function') {
+                d += performance.now(); //use high-precision timer if available
+            }
+            return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+                var r = (d + Math.random() * 16) % 16 | 0;
+                d = Math.floor(d / 16);
+                return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
+            });
+        }
+
+
+
+        var id = getCookie('id') != "" ? getCookie('id') : setCookie('id', _uuid(), 1);
         $(function () {
 
             $("#name").text('客戶編號 :' + id);
@@ -115,6 +129,10 @@
                 // alert("Message is received..." + received_msg);
                 if (received_msg.data != "" && typeof received_msg.data !== 'object') {
                     $("#msg").append('<li>Server : ' + received_msg.data + '</li>');
+
+                    var div = document.getElementById('msg');
+                    div.scrollTop = div.scrollHeight; //这里是关键的实现
+
                 } else if (typeof received_msg.data === 'object') {
                     // 是object 
                     switch (received_msg.data.event) {
@@ -150,7 +168,7 @@
             var msg = document.getElementById("msgtext").value;
             push_data(ws, msg, id);
             // console.log(msg);
-        }        
+        }
     </script>
 
 </head>
