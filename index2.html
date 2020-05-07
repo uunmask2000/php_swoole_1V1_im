@@ -43,7 +43,7 @@
             }
             ws.send(JSON.stringify(msg));
 
-            var div = document.getElementById('user_id_'+$('#set_people').text());
+            var div = document.getElementById('user_id_' + $('#set_people').text());
             div.scrollTop = div.scrollHeight; //这里是关键的实现
         }
 
@@ -80,6 +80,10 @@
                     // $("#msg").append('<li>客戶來訊 : ' + received_msg.data + '</li>'); 
                     $('#user_id_' + received_msg.id).append('<li> user_id_' + received_msg.id + '  客戶來訊 : ' +
                         received_msg.data + '</li>');
+
+                    var __body = 'user_id_' + received_msg.id;
+                    var div = document.getElementById(__body);
+                    div.scrollTop = div.scrollHeight; //这里是关键的实现
                 }
 
 

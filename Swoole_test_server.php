@@ -49,7 +49,7 @@ $server->on('message', function (swoole_websocket_server $server, $frame) {
         $redis->expire("user_id_" . $json['id'], 60 * 60 * 24);
     }
 
-    // print_r($json);
+  
 
     ### redis
 
@@ -57,7 +57,7 @@ $server->on('message', function (swoole_websocket_server $server, $frame) {
         case '2':
             // $return_fd = $redis->get("user_id_" . '1');
             $user_id   = $json['user_id'];
-            $return_fd = $redis->get($user_id);
+            $return_fd = $redis->get('user_id_' . $user_id);
             $__user_id = str_replace("user_id_", "", $user_id);
 
             ###  send to ?
