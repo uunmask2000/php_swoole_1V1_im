@@ -13,7 +13,7 @@ $dotenv->load();
 $__host = getenv('WebSocket_host');
 $__port = getenv('WebSocket_port');
 
-## redis user_id 
+## redis user_id
 $prefix = "user_id_";
 
 echo $__host . ':' . $__port . "\n";
@@ -53,7 +53,7 @@ $server->on('message', function (swoole_websocket_server $server, $frame) {
     }
 
     ### redis
-
+    $redis_key = "";
     switch ($json['id']) {
         case '2':
             $user_id = $json['user_id'];
@@ -77,7 +77,7 @@ $server->on('message', function (swoole_websocket_server $server, $frame) {
                 if ($php_errormsg == null) {
                     ## clear customer
                     ## customer Fd
-                    $redis->del($prefix .$user_id);
+                    $redis->del($prefix . $user_id);
                     ## customer message
                     $redis->del($__user_id . '_msg');
                     var_dump($php_errormsg);
@@ -102,14 +102,19 @@ $server->on('message', function (swoole_websocket_server $server, $frame) {
             $redis_key        = $json['id'] . '_msg';
 
             ###  send to ?
-            $server->push($return_fd, $frame->data);
+            @$server->push($return_fd, $frame->data);
 
             if ($json["data"] != "") {
                 $redis->lpush($redis_key, json_encode(['c' => 1, 'msg' => $frame->data]));
             }
             break;
-    }
 
+    }
+    echo $redis_key . "\n";
+    if ($redis_key != "") {
+        $redis->expire($redis_key, 60 * 60 * 24);
+
+    }
     // $info  = [] ;
     // $info[$json['id']] = [
     //     'fd' => $frame->fd,
